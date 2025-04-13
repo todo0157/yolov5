@@ -69,6 +69,20 @@ def autopad(k, p=None, d=1):
         p = k // 2 if isinstance(k, int) else [x // 2 for x in k]  # auto-pad
     return p
 
+# models/common.py
+class SPD_Conv(nn.Module):
+    def __init__(self, c1, c2, k=3):
+        super().__init__()
+        self.conv = nn.Conv2d(c1, c2, k, padding=k//2, groups=c1)
+
+# models/common.py
+class C2f(nn.Module):
+    def __init__(self, c1, c2, n=1, shortcut=False):
+        super().__init__()
+        self.cv1 = Conv(c1, c2//2, 1, 1)
+        self.cv2 = Conv(c1, c2//2, 1, 1)
+        self.m = nn.Sequential(*[GhostBottleneck(c2//2) for _ in range(n)])
+
 
 class Conv(nn.Module):
     """Applies a convolution, batch normalization, and activation function to an input tensor in a neural network."""

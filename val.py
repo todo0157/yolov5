@@ -60,6 +60,27 @@ from utils.metrics import ConfusionMatrix, ap_per_class, box_iou
 from utils.plots import output_to_target, plot_images, plot_val_study
 from utils.torch_utils import select_device, smart_inference_mode
 
+# 모델 로드 후, 검증 전에 프루닝 적용 (약 59번째 줄)
+model = attempt_load(weights, device=device, inplace=True, fuse=fuse)
+prune(model, amount=0.3)  # 30% 프루닝 적용 ★★★
+
+# 실행 명령어 
+#(bash)
+# COCO 데이터셋 기준 (검색 결과 [1] 참조)
+#python val.py --weights yolov5s.pt --data coco.yaml --img 640 --half --prune 0.3
+
+# 커스텀 모델 기준 (검색 결과 [2] 참조)
+#python val.py --weights best.pt --data custom.yaml --prune 0.4
+
+# 파인 튜닝 단계 
+# (bash)
+# 1. 프루닝 적용된 모델 저장
+# python val.py --weights best.pt --prune 0.3 --save-txt
+
+# 2. 파인튜닝 실행
+# python train.py --weights pruned_model.pt --data custom.yaml \
+# --epochs 50 --lr 0.001 --batch-size 32
+
 
 def save_one_txt(predn, save_conf, shape, file):
     """

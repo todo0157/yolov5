@@ -1,0 +1,4 @@
+# data/hyp.custom.yaml
+mosaic: 0.9  # Mosaic 9.0 적용
+mixup: 0.2
+copy_paste: 0.1  # 소형 객체 복제 강화
